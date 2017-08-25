@@ -7,7 +7,7 @@ var lastLoc = {
 		x: 0,
 		y: 0
 	},
-	curLoc;
+	curLoc,llastLoc;
 var lastTime;
 var lastLineWidth = -1;
 var strokeStyle = 'black';
@@ -78,6 +78,7 @@ $(document).ready(function () {
 function beginStroke(e) {
 	isMouseDown = true;
 	lastLoc = windowToCanvas(e.clientX, e.clientY);
+	llastLoc = lastLoc;
 	lastTime = new Date().getTime();
 }
 function endStroke(){
@@ -89,23 +90,31 @@ function moveStroke(e){
 		curLoc = windowToCanvas(e.clientX, e.clientY);
 		var s = Distance(lastLoc, curLoc);
 		var curTime = new Date().getTime();
-		var lineWidth = calcLineWidth(curTime - lastTime, s);
+		
 		//draw
 		ctx.beginPath();
 		ctx.strokeStyle = strokeStyle;
-		ctx.lineWidth = lineWidth;
+		ctx.lineWidth = lastLineWidth;
 		ctx.lineCap = 'round';
 		ctx.lineJoin = 'round';
-		ctx.moveTo(lastLoc.x, lastLoc.y);
-		ctx.lineTo(curLoc.x, curLoc.y);
+		ctx.moveTo(llastLoc.x, llastLoc.y);
+		var ctrPoint = calcCtrPoint();
+		ctx.quadraticCurveTo(ctrPoint.x,ctrPoint.y,curLoc.x, curLoc.y);
 		ctx.stroke();
-
+		
 		//update
+		calcLineWidth(curTime - lastTime, s);
+		llastLoc = lastLoc;
 		lastLoc = curLoc;
 		lastTime = curTime;
 	}
 }
 //var Vlist = new Array();
+function calcCtrPoint(){
+	var x = -llastLoc.x/2+2*lastLoc.x-curLoc.x/2;
+	var y = -llastLoc.y/2+2*lastLoc.y-curLoc.y/2;
+	return {x:x,y:y};
+}
 function calcLineWidth(t, s) {
 	var v = s / t;
 	//Vlist.push(v);
@@ -115,12 +124,13 @@ function calcLineWidth(t, s) {
 		lw = 30;
 	else
 		lw = Math.ceil(20 / (v + 0.9) + 10);
-	if (lastLineWidth == -1)
-		return lw;
+	if (lastLineWidth == -1){
+		lastLineWidth = lw;
+	}
 	else {
 		lastLineWidth = lastLineWidth * 2 / 3 + lw / 3;
-		return lastLineWidth;
 	}
+	return lastLineWidth;
 }
 
 function drawRice() {
