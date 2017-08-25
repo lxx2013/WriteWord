@@ -1,0 +1,51 @@
+*{
+	margin: 0;
+	padding: 0;
+}
+#Canvas{
+	display: block;
+	position: relative;
+	border: 1px solid #aaa;
+	display: block;
+	margin: 20px auto;
+}
+body{
+	position: relative;
+}
+footer{
+	display: block;
+/*	width: 800px;*/
+	height: 100px;
+	margin: 0 auto;
+}
+button{
+	display: block;
+	float: left;
+	margin: auto 10px auto 0;
+	border: 1px solid  black;
+	border-radius: 5px;;
+	background-color: #fff;
+	width: 40px;
+	height: 40px;
+	cursor: pointer;
+	outline: none;
+}
+button:hover{
+	border: 3px solid violet;
+}
+#clear{
+	float: right;
+	width: 80px;
+}
+#clear:hover{
+	background-color: #def;
+}
+#cb1{background-color: black;}
+#cb2{background-color: red;}
+#cb3{background-color: green;}
+#cb4{background-color: blue;}
+#cb5{background-color: yellow;}
+#cb6{background-color: aqua;}
+.color_button.color_button_selected{
+	border: 4px solid blueviolet;
+}
